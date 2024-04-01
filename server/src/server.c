@@ -1,22 +1,23 @@
 #include "server.h"
 
 int main(void) {
-	logger = log_create("log.log", "Servidor", 1, LOG_LEVEL_DEBUG);
+	logger = log_create("tp0.log","servidor",true,LOG_LEVEL_INFO);
 
-	int server_fd = iniciar_servidor();
+	int server_fd = iniciar_servidor(logger);
 	log_info(logger, "Servidor listo para recibir al cliente");
-	int cliente_fd = esperar_cliente(server_fd);
+	int cliente_fd = esperar_cliente(server_fd,logger);
 
 	t_list* lista;
 	while (1) {
 		int cod_op = recibir_operacion(cliente_fd);
 		switch (cod_op) {
 		case MENSAJE:
+			log_info(logger, "Me llego un mensaje");
 			recibir_mensaje(cliente_fd);
 			break;
 		case PAQUETE:
 			lista = recibir_paquete(cliente_fd);
-			log_info(logger, "Me llegaron los siguientes valores:\n");
+			log_info(logger, "Me llegaron los siguientes valores");
 			list_iterate(lista, (void*) iterator);
 			break;
 		case -1:

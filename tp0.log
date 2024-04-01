@@ -1,7 +1,20 @@
-[INFO] 03:31:46:468 client/(23173:23173): Config leida
-	Clave: Soy un log no hardcodeado
+[INFO] 18:57:18:150 servidor/(28096:28096): Servidor listo para recibir al cliente
+[INFO] 18:57:32:275 client/(28229:28229): Config leida
+	Clave: Hola soy el TP0
 	Ip: 127.0.0.1
 	Puerto: 4444
 
-[INFO] 03:31:49:535 client/(23173:23173): pruebas
-[INFO] 03:31:51:651 client/(23173:23173): utnso
+[INFO] 18:57:32:275 servidor/(28096:28096): Se conecto un cliente!
+[INFO] 18:57:32:276 servidor/(28096:28096): Me llego un mensaje
+[INFO] 18:57:40:817 client/(28229:28229): mensaje muy largoooooooooooo
+[INFO] 18:57:43:634 client/(28229:28229): mensaje corto
+[INFO] 18:57:47:602 client/(28229:28229): mensaje largooooo
+[INFO] 18:57:51:697 client/(28229:28229): muy corto
+[INFO] 18:57:52:353 client/(28229:28229): fin
+[INFO] 18:57:52:570 servidor/(28096:28096): Me llegaron los siguientes valores
+[INFO] 18:57:52:571 servidor/(28096:28096): mensaje muy largoooooooooooo
+[INFO] 18:57:52:571 servidor/(28096:28096): mensaje corto
+[INFO] 18:57:52:572 servidor/(28096:28096): mensaje largooooo
+[INFO] 18:57:52:572 servidor/(28096:28096): muy corto
+[INFO] 18:57:52:572 servidor/(28096:28096): fin
+[ERROR] 18:57:52:573 servidor/(28096:28096): el cliente se desconecto. Terminando servidor

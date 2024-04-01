@@ -2,6 +2,9 @@
     "debug.onTaskErrors": "abort",
     "files.associations": {
         "*.h": "c",
+        "functional": "c",
+        "system_error": "c",
+        "cerrno": "c"
     },
     "C_Cpp.errorSquiggles": "disabled",
     "cmake.configureOnOpen": false,

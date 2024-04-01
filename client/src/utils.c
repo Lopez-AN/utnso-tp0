@@ -1,5 +1,6 @@
 #include "utils.h"
 
+extern t_log* logger;
 
 void* serializar_paquete(t_paquete* paquete, int bytes)
 {
@@ -22,17 +23,35 @@ int crear_conexion(char *ip, char* puerto)
 	struct addrinfo *server_info;
 
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-	hints.ai_flags = AI_PASSIVE;
-
-	getaddrinfo(ip, puerto, &hints, &server_info);
+	hints.ai_family = AF_INET; // IPv4
+	hints.ai_socktype = SOCK_STREAM; // TCP
 
 	// Ahora vamos a crear el socket.
-	int socket_cliente = 0;
+	int error_code = getaddrinfo(ip, puerto, &hints, &server_info);
+	if(error_code) {
+		log_error(logger, "Error al crear socket (func getaddrinfo): %s [%d]",
+			gai_strerror(error_code), error_code);
+		exit(1);
+	}
 
+	// Creo el socket
+	int socket_cliente = socket(
+		server_info -> ai_family,
+		server_info -> ai_socktype,
+		server_info -> ai_protocol
+	);
+	if(socket_cliente == -1) {
+		log_error(logger, "Error al crear socket (func socket): %s [%d]",
+			strerror(errno), errno);
+		exit(1);
+	}
 	// Ahora que tenemos el socket, vamos a conectarlo
-
+	int res = connect(socket_cliente, server_info -> ai_addr, server_info -> ai_addrlen);
+	if(res == -1) {
+		log_error(logger, "Error al conectarse al server (func connect): %s [%d]",
+			strerror(errno), errno);
+		exit(1);
+	}
 
 	freeaddrinfo(server_info);
 

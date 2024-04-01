@@ -2,41 +2,46 @@
 
 t_log* logger;
 
-int iniciar_servidor(void)
+int iniciar_servidor(t_log* logger)
 {
-	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
+	// Creacion del socket
+	struct addrinfo hints; // Parametros de conexion
+	struct addrinfo *server_info; // Almacena la info del servidor luego de llamar a getaddrinfo
 
-	int socket_servidor;
-
-	struct addrinfo hints, *servinfo, *p;
-
+	// Bind + Listen
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
+	hints.ai_family = AF_INET; // Protocolo ipv4
+	hints.ai_socktype = SOCK_STREAM; // Protocolo TCP
+	// Este parametro + null en getaddrinfo permite aceptar cualquier IP que tenga asignada la máquina que está corriendo el proceso
 	hints.ai_flags = AI_PASSIVE;
 
-	getaddrinfo(NULL, PUERTO, &hints, &servinfo);
+	int error_code = getaddrinfo(NULL, "4444", &hints, &server_info);
+	if(error_code) {
+		fprintf(stderr, "Error al crear socket (func getaddrinfo): %s [%d]\n", gai_strerror(error_code), error_code);
+		exit(1);
+	}
 
-	// Creamos el socket de escucha del servidor
+	// Creo el socket
+	int socket_servidor = socket(
+		server_info -> ai_family,
+		server_info -> ai_socktype,
+		server_info -> ai_protocol
+	);
 
-	// Asociamos el socket a un puerto
+	// Lo bindeo
+	bind(socket_servidor, server_info -> ai_addr, server_info -> ai_addrlen);
+	// Pongo a escuchar, SOMAXCONN es el maximo numero de conexiones que acepta el OS
+	listen(socket_servidor, SOMAXCONN);
 
-	// Escuchamos las conexiones entrantes
-
-	freeaddrinfo(servinfo);
-	log_trace(logger, "Listo para escuchar a mi cliente");
+	freeaddrinfo(server_info); // Libero la memoria del struct generado por getaddrinfo
 
 	return socket_servidor;
 }
 
-int esperar_cliente(int socket_servidor)
+int esperar_cliente(int socket_servidor, t_log* logger)
 {
-	// Quitar esta línea cuando hayamos terminado de implementar la funcion
-	assert(!"no implementado!");
-
-	// Aceptamos un nuevo cliente
-	int socket_cliente;
+	// Quedo a la escucha de un cliente
+	int socket_cliente = accept(socket_servidor, NULL, NULL);
 	log_info(logger, "Se conecto un cliente!");
 
 	return socket_cliente;
@@ -69,7 +74,8 @@ void recibir_mensaje(int socket_cliente)
 {
 	int size;
 	char* buffer = recibir_buffer(&size, socket_cliente);
-	log_info(logger, "Me llego el mensaje %s", buffer);
+	printf(buffer);
+	//log_info(logger, "Me llego el mensaje %s", buffer);
 	free(buffer);
 }
 
